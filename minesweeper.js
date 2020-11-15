@@ -32,11 +32,7 @@ export class Game
     }
 
     initGame(difficulty)
-    {
-        let prevTimer = document.querySelector("#timer");
-        if (prevTimer != null)
-            clearInterval(prevTimer.dataset.id);
-        
+    { 
         this.board = [];
         this.diff = Game.DIFFICULTY[difficulty];
         this.finished = false;
@@ -60,16 +56,19 @@ export class Game
                 container.children[i].remove();
         }
 
-        let panel = document.createElement("div");
-        panel.id = "board-panel";
-        panel.className = `board-panel-${difficulty}`;
-        
         let board = document.createElement("div");
         board.id = "board";
         board.className = `board-${difficulty}`;
-        board.onclick= this.reveal.bind(this);
-        board.oncontextmenu =  this.toggleFlag.bind(this);
-        this.populateBoard(board);
+
+        let panel = document.createElement("div");
+        panel.id = "board-panel";
+        
+        let grid = document.createElement("div");
+        grid.id = "board-grid";
+        grid.className = `board-grid-${difficulty}`;
+        grid.onclick= this.reveal.bind(this);
+        grid.oncontextmenu =  this.toggleFlag.bind(this);
+        this.populateGrid(grid);
 
         this.mineCounter = document.createElement("div");
         this.mineCounter.id = "mine-counter";
@@ -91,16 +90,17 @@ export class Game
         panel.appendChild(this.mineCounter);
         panel.appendChild(reset);
         panel.appendChild(timer);
+        board.appendChild(grid);
     }
 
-    populateBoard(boardDiv)
+    populateGrid(grid)
     {
         const size = this.diff.rows * this.diff.cols;
 
         for (let i = 0; i < size; ++i)
         {
             const cell = this.createCell(i);
-            boardDiv.appendChild(cell);
+            grid.appendChild(cell);
             this.board.push({
                 value: null,
                 elem: cell,
@@ -113,7 +113,7 @@ export class Game
     createCell(index)
     {
         let cell = document.createElement("div");
-        cell.className = "cell default-cell";
+        cell.className = "cell cell-default";
         cell.dataset.index = index;
 
         return cell;
@@ -202,7 +202,7 @@ export class Game
         
         ++this.revealedCells;
         this.board[index].revealed = true;
-        this.board[index].elem.className ="cell revealed-cell";
+        this.board[index].elem.className = "cell cell-revealed";
         
         if (!this.isEmpty(index))
         {
@@ -241,7 +241,7 @@ export class Game
     onLose(index)
     {
         this.gameOver();
-        this.board[index].elem.className = "cell mine-cell";
+        this.board[index].elem.className = "cell cell-mine";
         this.revealMines(index);
     }
 
@@ -269,7 +269,7 @@ export class Game
                 if (i == index)
                     continue;
                 
-                this.board[i].elem.className = "cell revealed-cell";
+                this.board[i].elem.className = "cell cell-revealed";
             }
             else if (this.board[i].flagged)
                 this.board[i].elem.innerHTML = Game.WRONG_FLAG;

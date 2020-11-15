@@ -1,13 +1,45 @@
 #board {
-    display: grid;
     border: 2px solid black;
     margin: auto;
+}
+
+.board-easy {
+    width: 225px;
+}
+
+.board-medium {
+    width: 400px;
+}
+
+.board-hard {
+    width: 750px;
+}
+
+#board-grid {
+    display: grid;
+}
+
+.board-grid-easy {   
+    height: 225px;
+    grid-template-rows: repeat(9, 1fr);
+    grid-template-columns: repeat(9, 1fr);
+}
+
+.board-grid-medium {
+    height: 400px;
+    grid-template-rows: repeat(16, 1fr);
+    grid-template-columns: repeat(16, 1fr);
+}
+
+.board-grid-hard {
+    height: 400px;
+    grid-template-rows: repeat(16, 1fr);
+    grid-template-columns: repeat(30, 1fr);
 }
 
 #board-panel {
     display: grid;
     background-color: #bebebe;
-    grid-row: 1 / span 2;
     grid-template-columns: 40% 20% 40%;
     border: 1px solid #808080;
 }
@@ -20,9 +52,7 @@
 
 #mine-counter, #timer {
     font-size: 18px;
-    padding-top: 15px;
-    padding-left: 10px;
-    padding-right: 10px;
+    padding: 15px 10px 10px 10px;
     background-color: #363636;
     color: #ff0000;
     text-shadow: 1px 1px 1px #000000;
@@ -40,40 +70,7 @@
 #game-reset:active {
     background-color: #ff0000;
 }
-
-.board-easy {
-    width: 225px;
-    height: 275px;
-    grid-template-rows: repeat(11, 1fr);
-    grid-template-columns: repeat(9, 1fr);
-}
-
-.board-panel-easy {
-    grid-column: 1 / span 9;
-}
-
-.board-medium {
-    width: 400px;
-    height: 450px;
-    grid-template-rows: repeat(18, 1fr);
-    grid-template-columns: repeat(16, 1fr);
-}
-
-.board-panel-medium {
-    grid-column: 1/ span 16;
-}
-
-.board-hard {
-    width: 750px;
-    height: 450px;
-    grid-template-rows: repeat(18, 1fr);
-    grid-template-columns: repeat(30, 1fr);
-}
-
-.board-panel-hard {
-    grid-column: 1/ span 30;
-}
-
+    
 .cell {
     border: 1px solid #808080;
     font-weight: bold;
@@ -81,18 +78,18 @@
     user-select: none;
 }
 
-.default-cell {
-    background-color: #bebebe;
-}
-
 .cell:hover {
     background-color: #808080;
 }
 
-.revealed-cell {
+.cell-default {
+    background-color: #bebebe;
+}
+
+.cell-revealed {
     background-color: #dcdcdc;
 }
 
-.mine-cell {
+.cell-mine {
     background-color: #ff0000;
 }
