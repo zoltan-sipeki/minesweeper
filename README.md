@@ -5,6 +5,6 @@ A jobb gomb lenyomásával megjelölhetjük az általunk veszélyesnek vélt mez
 A különböző számok azt mutatják, hogy a szomszédos mezőkön hány darab akna található.
 Ez a játék a *Debreceni Egyetem Informatikai Kar* levelezős hallgatói által készült a *Szoftverfejlesztési módszertanok* nevű tárgyra.
 ## **A projekt tagjai:** ##
-Bartha Máté
-Sipeki Zoltán
-Ignéczi Tibor
+- Bartha Máté
+- Sipeki Zoltán
+- Ignéczi Tibor
