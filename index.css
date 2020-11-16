@@ -3,6 +3,16 @@
     border: 1px solid black;
 }
 
+body {
+	background-color: /*#0e2f44*/#949e96;
+	/*height: 150%;*/
+	background-image: url("blur.jpg");
+    backdrop-filter: blur(8px);
+	background-position: center;
+	background-repeat: no-repeat;
+	background-size: 200%;
+}
+
 nav {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
@@ -65,7 +75,7 @@ li {
 }
 
 .button:hover {
-    background-color: aqua;
+    background-color: rgba(104,143,244,0.5);
 }
 
 .button-clickable {

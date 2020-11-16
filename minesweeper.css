@@ -39,7 +39,7 @@
 
 #board-panel {
     display: grid;
-    background-color: #bebebe;
+    background-color: /*#bebebe*/rgba(25, 25, 25, 0.4);
     grid-template-columns: 40% 20% 40%;
     border: 1px solid #808080;
 }
@@ -53,8 +53,8 @@
 #mine-counter, #timer {
     font-size: 18px;
     padding: 15px 10px 10px 10px;
-    background-color: #363636;
-    color: #ff0000;
+    background-color: /*#363636*/rgba(0, 0, 0, 0.4);
+    color: /*#ff0000*/#407bbf;
     text-shadow: 1px 1px 1px #000000;
 }
 
@@ -64,32 +64,32 @@
 }
 
 #game-reset:hover {
-    background-color: #808080;
+    background-color: rgba(50, 0, 0, 0.4);;
 }
 
 #game-reset:active {
-    background-color: #ff0000;
+    background-color: rgba(200, 0, 0, 0.6);;
 }
     
 .cell {
-    border: 1px solid #808080;
+    border: 1px solid rgba(0, 0, 0, 0.5)/*#808080*/;
     font-weight: bold;
     text-align: center;
     user-select: none;
 }
 
 .cell:hover {
-    background-color: #808080;
+    background-color: /*#808080*/rgba(200, 200, 200, 0.5);
 }
 
 .cell-default {
-    background-color: #bebebe;
+    background-color: /*#bebebe*/rgba(0, 0, 0, 0.2);
 }
 
 .cell-revealed {
-    background-color: #dcdcdc;
+    background-color: /*#dcdcdc*/rgba(100, 100, 100, 0.2);
 }
 
 .cell-mine {
-    background-color: #ff0000;
+    background-color: /*#ff0000*/rgba(200, 0, 0, 0.8);
 }
