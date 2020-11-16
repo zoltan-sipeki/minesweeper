@@ -4,16 +4,19 @@ export class Game
 {
     static DIFFICULTY = {
         easy: {
+            name: "easy",
             rows: 9,
             cols: 9,
             mines: 10
         },
         medium: {
+            name: "medium",
             rows: 16,
             cols: 16,
             mines: 40
         },
         hard: {
+            name: "hard",
             rows: 16,
             cols: 30,
             mines: 99
@@ -25,40 +28,71 @@ export class Game
     static FLAG = "&#x1F6A9;";
     static WRONG_FLAG = "&#x26D4;";
     static RESET_BUTTON = "&#x1F600;";
+
+    static instances = {};
     
     constructor(difficulty)
     {
-        this.initGame(difficulty);
-    }
-
-    initGame(difficulty)
-    { 
-        this.board = [];
+        this.state = [];
         this.diff = Game.DIFFICULTY[difficulty];
         this.finished = false;
         this.started = false;
         this.minesLeft = this.diff.mines;
         this.revealedCells = 0;
+        this.board = null;
+        this.mineCounter = null;
+        this.timer = null;
         
         this.createBoard(difficulty);
         this.placeMines();
         this.fillWithNumbers();
-        
-        this.timer = new Timer();
+
+        Game.instances[difficulty] = this;
+    }
+
+    reset()
+    {
+        this.finished = false;
+        this.started = false;
+        this.minesLeft = this.diff.mines;
+        this.revealedCells = 0;
+
+        for (let data of this.state)
+        {
+            data.value = null;
+            data.elem.className = "cell cell-default";
+            data.elem.innerText = "";
+            data.flagged = false;
+            data.revealed = false;
+        }
+
+        this.mineCounter.innerText = this.minesLeft;
+
+        this.placeMines();
+        this.fillWithNumbers();
+        this.timer.reset();
+    }
+
+    stopTimer()
+    {
+        this.timer.stop();
+    }
+
+    show()
+    {
+        document.querySelector("#container").appendChild(this.board);
+    }
+
+    hide()
+    {
+        this.board.remove();
     }
 
     createBoard(difficulty)
     {            
-        let container = document.querySelector("#container");
-        if (container.childElementCount > 0)
-        {
-            for (let i = container.childElementCount - 1; i >= 0 ; --i)
-                container.children[i].remove();
-        }
-
-        let board = document.createElement("div");
-        board.id = "board";
-        board.className = `board-${difficulty}`;
+        this.board = document.createElement("div");
+        this.board.id = "board";
+        this.board.className = `board-${difficulty}`;
 
         let panel = document.createElement("div");
         panel.id = "board-panel";
@@ -79,18 +113,18 @@ export class Game
         reset.id = "game-reset";
         reset.className = "panel-component";
         reset.innerHTML = Game.RESET_BUTTON;
-        reset.onclick= this.initGame.bind(this, difficulty);
+        reset.onclick= this.reset.bind(this);
 
         let timer = document.createElement("div");
         timer.id = "timer";
         timer.className = "panel-component";
+        this.timer = new Timer(timer);
 
-        container.appendChild(board);
-        board.appendChild(panel);
+        this.board.appendChild(panel);
         panel.appendChild(this.mineCounter);
         panel.appendChild(reset);
         panel.appendChild(timer);
-        board.appendChild(grid);
+        this.board.appendChild(grid);
     }
 
     populateGrid(grid)
@@ -101,8 +135,8 @@ export class Game
         {
             const cell = this.createCell(i);
             grid.appendChild(cell);
-            this.board.push({
-                value: null,
+            this.state.push({
+                value: 0,
                 elem: cell,
                 revealed: false,
                 flagged: false
@@ -124,7 +158,7 @@ export class Game
         let counter = 0;
         while (counter < this.diff.mines)
         {
-            const candidate = Math.floor(Math.random() * this.board.length);
+            const candidate = Math.floor(Math.random() * this.state.length);
             if (this.isMine(candidate))
                 continue;
 
@@ -135,12 +169,12 @@ export class Game
 
     isMine(index)
     {
-        return this.board[index].value == Game.MINE;
+        return this.state[index].value == Game.MINE;
     }
 
     placeMine(index)
     {
-        this.board[index].value = Game.MINE;
+        this.state[index].value = Game.MINE;
     }
 
     fillWithNumbers()
@@ -162,7 +196,7 @@ export class Game
                 sum += i < this.diff.rows - 1 && j > 0 && this.isMine(this.index(i + 1, j - 1));
                 sum += i < this.diff.rows - 1 && j < this.diff.cols - 1 && this.isMine(this.index(i + 1, j + 1));
 
-                this.board[this.index(i, j)].value = sum;
+                this.state[this.index(i, j)].value = sum;
             }
         }
     }
@@ -191,7 +225,7 @@ export class Game
     {
         const index = this.index(i, j);
 
-        if (i < 0 || j < 0 || i >= this.diff.rows|| j >= this.diff.cols|| this.board[index].revealed || this.board[index].flagged)
+        if (i < 0 || j < 0 || i >= this.diff.rows|| j >= this.diff.cols|| this.state[index].revealed || this.state[index].flagged)
             return;
         
         if (this.isMine(index))
@@ -201,14 +235,14 @@ export class Game
         }
         
         ++this.revealedCells;
-        this.board[index].revealed = true;
-        this.board[index].elem.className = "cell cell-revealed";
+        this.state[index].revealed = true;
+        this.state[index].elem.className = "cell cell-revealed";
         
         if (!this.isEmpty(index))
         {
-            const value = this.board[index].value;
-            this.board[index].elem.innerText = this.board[index].value;
-            this.board[index].elem.style.color = Game.TEXT_COLORS[value - 1];
+            const value = this.state[index].value;
+            this.state[index].elem.innerText = this.state[index].value;
+            this.state[index].elem.style.color = Game.TEXT_COLORS[value - 1];
         }
         else
         {
@@ -228,7 +262,7 @@ export class Game
 
     won()
     {
-        return this.revealedCells == this.board.length - this.diff.mines && this.minesLeft == 0;
+        return this.revealedCells == this.state.length - this.diff.mines && this.minesLeft == 0;
     }
 
     onWin()
@@ -241,7 +275,7 @@ export class Game
     onLose(index)
     {
         this.gameOver();
-        this.board[index].elem.className = "cell cell-mine";
+        this.state[index].elem.className = "cell cell-mine";
         this.revealMines(index);
     }
 
@@ -253,26 +287,26 @@ export class Game
 
     isEmpty(index)
     {
-        return !this.isMine(index) && this.board[index].value == 0;
+        return !this.isMine(index) && this.state[index].value == 0;
     }
 
     revealMines(index)
     {
-        for (let i = 0; i < this.board.length; ++i)
+        for (let i = 0; i < this.state.length; ++i)
         {
             if (this.isMine(i))
             {
-                if (this.board[i].flagged)
+                if (this.state[i].flagged)
                     continue;
 
-                this.board[i].elem.innerHTML = this.board[i].value;
+                this.state[i].elem.innerHTML = this.state[i].value;
                 if (i == index)
                     continue;
                 
-                this.board[i].elem.className = "cell cell-revealed";
+                this.state[i].elem.className = "cell cell-revealed";
             }
-            else if (this.board[i].flagged)
-                this.board[i].elem.innerHTML = Game.WRONG_FLAG;
+            else if (this.state[i].flagged)
+                this.state[i].elem.innerHTML = Game.WRONG_FLAG;
         }
     }
 
@@ -284,12 +318,12 @@ export class Game
             return;
 
         const index = event.target.dataset.index;
-        if (this.board[index].revealed)
+        if (this.state[index].revealed)
             return;
 
-        this.board[index].flagged = !this.board[index].flagged;
+        this.state[index].flagged = !this.state[index].flagged;
 
-        if (this.board[index].flagged)
+        if (this.state[index].flagged)
         {
             --this.minesLeft;
             event.target.innerHTML = Game.FLAG;

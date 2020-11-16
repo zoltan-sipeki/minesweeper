@@ -5,13 +5,38 @@ document.querySelector("#difficulty-buttons").onclick = selectDifficulty;
 document.querySelector("#menu").onclick = selectMenuItem;
 
 let game = null;
+let score = null;
+let leaderboard = null;
+let current = null;
 
 function selectDifficulty(event)
 {
     if (!("difficulty" in event.target.dataset))
         return;
 
-    game = new Game(event.target.dataset.difficulty);
+    const difficulty = event.target.dataset.difficulty;
+
+    if (current != null)
+        current.hide();
+
+    if (game == null) 
+    {
+        game = new Game(difficulty);
+    }
+    else if (!(difficulty in Game.instances))
+    {
+        game.stopTimer();
+        game = new Game(difficulty);
+    }
+    else
+    {
+        game.stopTimer();
+        game = Game.instances[difficulty];
+        game.reset();
+    }
+
+    current = game;
+    current.show();
 }
 
 function fetchUsername()

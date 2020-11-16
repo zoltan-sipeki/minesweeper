@@ -4,9 +4,9 @@ export class Timer
     static MINUTE_MS = 60000;
     static SECOND_MS = 1000;
 
-    constructor()
+    constructor(view)
     {
-        this.view = document.querySelector("#timer");
+        this.view = view;
         this.id = 0;
         this.elapsed = 0;
         this.lastTime = 0;
@@ -23,6 +23,15 @@ export class Timer
     stop()
     {
         clearInterval(this.id);
+    }
+
+    reset()
+    {
+        this.stop();
+        this.id = 0;
+        this.elapsed = 0;
+        this.lastTime = 0;
+        this.view.innerText = "00:00:00";
     }
 
     increment()
