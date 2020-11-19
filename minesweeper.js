@@ -92,7 +92,7 @@ export class Game
     {            
         this.board = document.createElement("div");
         this.board.id = "board";
-        this.board.className = `board-${difficulty}`;
+        this.board.className = `board-${difficulty} shadow`;
 
         let panel = document.createElement("div");
         panel.id = "board-panel";
