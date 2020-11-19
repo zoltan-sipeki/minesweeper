@@ -47,12 +47,14 @@ nav {
     background-color: rgba(0,0,0,0.3);
 }
 
-.dropdown-item:active {
-    background-color: rgba(0,0,0,0.6);
-}
 
 .dropdown-item:hover {
     cursor: pointer;
+    background-color: rgba(0,0,0,0.6);
+}
+
+.dropdown-item:active {
+    background-color: rgba(0,0,0,0.75);
 }
 
 ul {
