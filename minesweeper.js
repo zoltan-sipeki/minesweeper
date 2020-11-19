@@ -59,7 +59,7 @@ export class Game
 
         for (let data of this.state)
         {
-            data.value = null;
+            data.value = 0;
             data.elem.className = "cell cell-default";
             data.elem.innerText = "";
             data.flagged = false;
@@ -169,12 +169,12 @@ export class Game
 
     isMine(index)
     {
-        return this.state[index].value == Game.MINE;
+        return this.state[index].value == -1;
     }
 
     placeMine(index)
     {
-        this.state[index].value = Game.MINE;
+        this.state[index].value = -1;
     }
 
     fillWithNumbers()
@@ -241,7 +241,7 @@ export class Game
         if (!this.isEmpty(index))
         {
             const value = this.state[index].value;
-            this.state[index].elem.innerText = this.state[index].value;
+            this.state[index].elem.innerText = value;
             this.state[index].elem.style.color = Game.TEXT_COLORS[value - 1];
         }
         else
@@ -299,7 +299,7 @@ export class Game
                 if (this.state[i].flagged)
                     continue;
 
-                this.state[i].elem.innerHTML = this.state[i].value;
+                this.state[i].elem.innerHTML = Game.MINE;
                 if (i == index)
                     continue;
                 
