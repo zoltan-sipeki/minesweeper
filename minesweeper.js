@@ -23,7 +23,7 @@ export class Game
         }
     };
 
-    static TEXT_COLORS = ["#0000ff", "#008000", "#ff0000", "#000040", "#004000", "#400000", "#000020", "#002000", "#200020"];
+    static NUMBER_COLORS = ["#0000ff", "#008000", "#ff0000", "#000040", "#004000", "#400000", "#000020", "#002000", "#200020"];
     static MINE = "&#x1F4A3;";
     static FLAG = "&#x1F6A9;";
     static WRONG_FLAG = "&#x26D4;";
@@ -242,7 +242,7 @@ export class Game
         {
             const value = this.state[index].value;
             this.state[index].elem.innerText = value;
-            this.state[index].elem.style.color = Game.TEXT_COLORS[value - 1];
+            this.state[index].elem.style.color = Game.NUMBER_COLORS[value - 1];
         }
         else
         {
