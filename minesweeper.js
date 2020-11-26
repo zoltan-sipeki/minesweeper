@@ -27,7 +27,8 @@ export class Game
     static MINE = "&#x1F4A3;";
     static FLAG = "&#x1F6A9;";
     static WRONG_FLAG = "&#x26D4;";
-    static RESET_BUTTON = "&#x1F600;";
+    static GRIN = "&#x1F600;";
+    static GASP = "&#x1F631;";
 
     static instances = {};
     
@@ -42,6 +43,7 @@ export class Game
         this.board = null;
         this.mineCounter = null;
         this.timer = null;
+        this.resetButton = null;
         
         this.createBoard(difficulty);
         this.placeMines();
@@ -102,6 +104,8 @@ export class Game
         grid.className = `board-grid-${difficulty}`;
         grid.onclick= this.reveal.bind(this);
         grid.oncontextmenu =  this.toggleFlag.bind(this);
+        grid.onmousedown = this.gasp.bind(this);
+        grid.onmouseup = this.grin.bind(this);
         this.populateGrid(grid);
 
         this.mineCounter = document.createElement("div");
@@ -109,11 +113,11 @@ export class Game
         this.mineCounter.className = "panel-component";
         this.mineCounter.innerText = this.minesLeft;
 
-        let reset = document.createElement("div");
-        reset.id = "game-reset";
-        reset.className = "panel-component";
-        reset.innerHTML = Game.RESET_BUTTON;
-        reset.onclick= this.reset.bind(this);
+        this.resetButton = document.createElement("div");
+        this.resetButton.id = "game-reset";
+        this.resetButton.className = "panel-component";
+        this.resetButton.innerHTML = Game.GRIN;
+        this.resetButton.onclick= this.reset.bind(this);
 
         let timer = document.createElement("div");
         timer.id = "timer";
@@ -122,9 +126,31 @@ export class Game
 
         this.board.appendChild(panel);
         panel.appendChild(this.mineCounter);
-        panel.appendChild(reset);
+        panel.appendChild(this.resetButton);
         panel.appendChild(timer);
         this.board.appendChild(grid);
+    }
+
+    gasp(event)
+    {
+        if (!event.target.classList.contains("cell"))
+            return;
+
+        if (this.state[event.target.dataset.index].revealed)
+            return;
+            
+        this.resetButton.innerHTML = Game.GASP;
+    }
+
+    grin(event)
+    {
+        if (!event.target.classList.contains("cell"))
+            return;
+
+        if (this.state[event.target.dataset.index].revealed)
+            return;
+
+        this.resetButton.innerHTML = Game.GRIN;
     }
 
     populateGrid(grid)
